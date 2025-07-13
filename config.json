@@ -1,0 +1,19 @@
+{
+  "accounts": [
+    {
+      "Name": "Franchisee A",
+      "ClientID": "INSERT CLIENT ID HERE",
+      "ClientKEY": "INSERT CLIENT KEY HERE"
+    },
+    {
+      "Name": "Franchisee B",
+      "ClientID": "INSERT CLIENT ID HERE",
+      "ClientKEY": "INSERT CLIENT KEY HERE"
+    },
+    {
+      "Name": "Franchisee C",
+      "ClientID": "INSERT CLIENT ID HERE",
+      "ClientKEY": "INSERT CLIENT KEY HERE"
+    }
+  ]
+}
