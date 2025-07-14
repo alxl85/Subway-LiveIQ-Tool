@@ -5,9 +5,6 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/alxl85/Subway-LiveIQ-Tool/actions">
-    <img src="https://img.shields.io/github/actions/workflow/status/alxl85/Subway-LiveIQ-Tool/ci.yml?label=CI%20build" alt="CI status">
-  </a>
   <img src="https://img.shields.io/badge/Python-3.8–3.12-blue?logo=python&logoColor=white">
   <img src="https://img.shields.io/badge/License-MIT-green">
 </p>
