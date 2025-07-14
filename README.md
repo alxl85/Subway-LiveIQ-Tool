@@ -34,7 +34,8 @@ Running multiple Subway® stores usually means juggling LiveIQ log-ins and expor
 
 ## Screenshots
 
-<img src="screenshots/ss-3.png" height="300" alt="demo animation"><img src="screenshots/ss-4.png" height="300" alt="demo animation"><img src="screenshots/ss-5.png" height="300" alt="demo animation"><img src="screenshots/ss-6.png" height="300" alt="demo animation">
+<img src="screenshots/ss-3.png" style="width:300px;height:300px;object-fit:cover;" alt="demo animation"><img src="screenshots/ss-4.png" style="width:300px;height:300px;object-fit:cover;" alt="demo animation"><img src="screenshots/ss-5.png" style="width:300px;height:300px;object-fit:cover;" alt="demo animation"><img src="screenshots/ss-6.png" style="width:300px;height:300px;object-fit:cover;" alt="demo animation">
+
 
 ---
 
