@@ -116,8 +116,11 @@ Add one entry per franchisee account; duplicate store numbers are auto‑dedupli
 ```text
 Subway-LiveIQ-Tool/
 ├ main.py
-├ logo.ico
+├ requirements.txt
+├ screenshots/
+│   └ logo.ico
 ├ config.json
+├ error.log
 └ modules/
     ├ daily_sales.py
     └ daily_clockins.py
