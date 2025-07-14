@@ -35,10 +35,9 @@ Running multiple Subway® stores usually means juggling LiveIQ log-ins and expor
 
 ---
 
-## Instant demo
-*(Replace `screenshots/demo.gif` once you have a screencast)*
+## Screenshots
 
-<img src="screenshots/demo.gif" width="700" alt="demo animation">
+<img src="screenshots/ss-3.png" height="300" alt="demo animation"><img src="screenshots/ss-4.png" height="300" alt="demo animation"><img src="screenshots/ss-5.png" height="300" alt="demo animation"><img src="screenshots/ss-6.png" height="300" alt="demo animation">
 
 ---
 
