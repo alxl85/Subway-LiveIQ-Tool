@@ -104,7 +104,7 @@ pyinstaller --onefile --noconsole `
 2. **Fresh Connect ▸ Instructions** → **Generate Keys**.  
 3. Copy *Client ID* & *Client KEY* into **config.json**.  
 
-<img src="screenshots/ss-1.png" width="600">
+<img src="screenshots/ss-1.png" height="400">
 <img src="screenshots/ss-2.png" width="600">
 </details>
 
@@ -155,10 +155,10 @@ Release/
 
 ## Developing custom modules
 
-This site outlines the entire LiveIQ schema.
+This site outlines the entire LiveIQ API schema.
 https://app.swaggerhub.com/apis/Subway/freshconnect_liveiq_franchisee_api/v1
 
-Each plugin is **one file** in **modules/**. The viewer imports it and calls `run(window)`.
+Each module is **one file** in **modules/**. The viewer imports it and calls `run(window)`.
 
 <details>
 <summary><b>Minimal module example</b></summary>
