@@ -1,4 +1,4 @@
-"""LiveIQ Multi-Franchisee quick-viewer (no local JSON archival)
+"""Subway-LiveIQ-Tool quick-viewer
 -----------------------------------------------------------------
 • Reads multiple franchisee credentials from *config.json*.
 • Auto-discovers stores via /api/Restaurants.
