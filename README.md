@@ -5,13 +5,7 @@
   <i>Because spreadsheets are so 2020.</i>
 </p>
 
-<p align="center">
-  <a href="https://github.com/your-org/liveiq-viewer/actions">
-    <img src="https://img.shields.io/github/actions/workflow/status/your-org/liveiq-viewer/ci.yml?label=CI%20build" alt="build status">
-  </a>
-  <img src="https://img.shields.io/badge/Python-3.8–3.12-blue?logo=python&logoColor=white">
-  <img src="https://img.shields.io/badge/License-MIT-green">
-</p>
+
 
 ---
 
