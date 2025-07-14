@@ -1,16 +1,45 @@
-# LiveIQ Multi-Franchisee Viewer
-*A Tkinter desktop tool for Subway® LiveIQ data*
+
+<p align="center">
+  <img src="screenshots/logo.ico" width="96" alt="LiveIQ Viewer logo"><br>
+  <b>LiveIQ Multi‑Franchisee Viewer</b><br>
+  <i>Because spreadsheets are so 2020.</i>
+</p>
+
+<p align="center">
+  <a href="https://github.com/your-org/liveiq-viewer/actions">
+    <img src="https://img.shields.io/github/actions/workflow/status/your-org/liveiq-viewer/ci.yml?label=CI%20build" alt="build status">
+  </a>
+  <img src="https://img.shields.io/badge/Python-3.8–3.12-blue?logo=python&logoColor=white">
+  <img src="https://img.shields.io/badge/License-MIT-green">
+</p>
 
 ---
 
 ## Table of Contents
-1. [What this app does](#what-this-app-does)  
-2. [Quick start (Python script)](#quick-start-python-script)  
-3. [Building a standalone .exe](#building-a-standalone-exe)  
-4. [Working with `config.json`](#working-with-configjson)  
-5. [Folder map](#folder-map)  
-6. [Troubleshooting](#troubleshooting)  
-7. [Developing custom modules](#developing-custom-modules)  
+1. [Why this exists](#why-this-exists)  
+2. [Instant demo](#instant-demo)  
+3. [What this app does](#what-this-app-does)  
+4. [Quick start](#quick-start)  
+5. [Packaging to .exe](#packaging-to-exe)  
+6. [Working with `config.json`](#working-with-configjson)  
+7. [Folder map](#folder-map)  
+8. [Troubleshooting](#troubleshooting)  
+9. [LiveIQ API quirks & pitfalls](#liveiq-api-quirks--pitfalls)  
+10. [Developing custom modules](#developing-custom-modules)  
+11. [Contributing](#contributing)  
+12. [License](#license)  
+
+---
+
+## Why this exists
+Running multiple Subway® stores often means juggling numerous LiveIQ log‑ins and exporting clunky CSVs. **This viewer** talks directly to the franchisee API, merges every store and every account into one UI, and gives you clean JSON or one‑click dashboards.
+
+---
+
+## Instant demo
+*(Replace `screenshots/demo.gif` with a real screencast when available)*
+
+<img src="screenshots/demo.gif" width="700" alt="animated demo">
 
 ---
 
@@ -28,39 +57,32 @@
 
 ---
 
-## Quick start (Python script)
+## Quick start
 
 ```bash
 git clone https://github.com/your-org/liveiq-viewer.git
 cd liveiq-viewer
-
-python -m venv .venv
-# Windows
-.venv\Scripts\activate
-# macOS / Linux
-source .venv/bin/activate
-
+python -m venv .venv && (. .venv/bin/activate || .venv\Scripts\activate)
 pip install -r requirements.txt
 python liveiq_gui.py
 ```
 
-First launch creates **config.json** and (if absent) **modules/**.  
-Fill in credentials (see below) and rerun.
+First run creates **config.json** and an empty **modules/** directory.  
+Fill in credentials (see below) and relaunch.
 
 ---
 
-## Building a standalone .exe
-
-> **Prerequisites:** Windows, Python 3.8–3.12, and `pip install pyinstaller pillow`.
+## Packaging to .exe
 
 ```powershell
-pyinstaller --onefile --noconsole ^
-  --icon="logo.ico" ^
-  --add-data "modules;modules" ^
+pyinstaller --onefile --noconsole `
+  --icon="logo.ico" `
+  --add-data "modules;modules" `
   liveiq_gui.py
 ```
 
-*On macOS/Linux change the semicolon to a colon in `--add-data`.*
+> `--noconsole` hides the black terminal; omit while debugging.  
+> On macOS/Linux change the semicolon to a colon in `--add-data`.
 
 ---
 
@@ -73,127 +95,123 @@ pyinstaller --onefile --noconsole ^
       "Name": "Franchisee A",
       "ClientID": "xxxxxxxx",
       "ClientKEY": "yyyyyyyy"
-    },
-    {
-      "Name": "Franchisee B",
-      "ClientID": "xxxxxxxx",
-      "ClientKEY": "yyyyyyyy"
     }
   ]
 }
 ```
 
-*Location –* same folder as `liveiq_gui.py` or the EXE.
+**Location** — same folder as `liveiq_gui.py` or `liveiq_gui.exe`.
 
-### Add / edit accounts
-1. Open **config.json** in a text editor.  
-2. Duplicate an object or edit values.  
-3. Save and relaunch—new accounts appear automatically.
+<details>
+<summary><b>How to get API keys</b></summary>
+
+1. Log into Subway Fresh Connect.  
+2. **Fresh Connect ▸ Instructions** → **Generate Keys**.  
+3. Copy *Client ID* & *Client KEY* into **config.json**.  
+
+<img src="screenshots/ss-1.png" width="600" alt="generate keys">  
+<img src="screenshots/ss-2.png" width="600" alt="copy keys">  
+</details>
+
+Add one object per franchisee account; duplicate store numbers are de‑duplicated automatically.
 
 ---
 
 ## Folder map
-
-```
+```text
 liveiq-viewer/
-│ liveiq_gui.py
-│ requirements.txt
-│ logo.ico
-│ config.json         # user credentials (created first run)
-│ error.log           # generated at runtime
-└modules/
-   ├ daily_sales.py
-   └ daily_clockins.py
+├─ liveiq_gui.py
+├─ logo.ico
+├─ requirements.txt
+├─ config.json
+├─ error.log
+└─ modules/
+   ├─ daily_sales.py
+   └─ daily_clockins.py
 ```
 
-Packaged (`--onefile`) layout:
+Packaged layout:
 
 ```
 MyApp/
 │ liveiq_gui.exe
 │ config.json
-└modules/             # user overrides (optional)
+└modules/
 ```
 
 ---
 
 ## Troubleshooting
 
-| Issue | Fix |
-|-------|-----|
-| **Blank window / no response** | Rebuild without `--noconsole` and run EXE from *cmd* to read traceback. |
-| **No module buttons** | Ensure `modules/` exists beside the EXE *or* rebuild with `--add-data "modules;modules"`. |
-| **“config.json created” every launch** | Edit the config that lives next to the EXE, not one in Temp. |
-| **Icon error in PyInstaller** | Provide a true 256 × 256 32‑bit `.ico` or install Pillow for auto‑conversion. |
+| 😖 Symptom | 🩹 Fix |
+|------------|-------|
+| Blank window / no response | Rebuild without `--noconsole`, run EXE from *cmd* to see traceback. |
+| Missing plugin buttons | Ensure `modules/` exists or include it via `--add-data`. |
+| “config.json created” every launch | Edit the config next to the EXE, not the temp copy. |
+| Icon refused | Provide a 256×256, 32‑bit `.ico` or let Pillow auto‑convert. |
+
+---
+
+## LiveIQ API quirks & pitfalls
+
+| Issue | Impact | Mitigation |
+|-------|--------|-----------|
+| Undocumented rate‑limit (~60 req/min) | 429 errors | ≤10 threads, retry with back‑off. |
+| Data latency (30–60 min) | “Today” may look low | Pull data after close or show warning. |
+| Schema drift (`netSale` vs `netSales`) | KeyError | Always `.get()` with defaults. |
+| Store‑local timestamps | Cross‑TZ math wrong | Convert with `pytz`. |
+| Intermittent 500/502 | Module crash | Wrap in `try/except`, retry. |
 
 ---
 
 ## Developing custom modules
 
-Modules live in **modules/**. Each file becomes a button at runtime.
+Each plugin is **one file** in *modules/*. The viewer imports it and calls `run(window)`.
 
-### 1  Minimal template
+<details>
+<summary><b>Click for minimal example</b></summary>
 
 ```python
 # modules/my_module.py
-def run(window):
-    """window is a fresh Tkinter *Toplevel*."""
-    import tkinter as tk
+def run(win):
+    import tkinter as tk, threading, datetime
     from tkinter.scrolledtext import ScrolledText
-    from datetime import date
     from __main__ import fetch_data, store_vars, config_accounts
 
-    window.title("My Module")
-    window.geometry("600x400")
-    out = ScrolledText(window, font=("Consolas", 10))
-    out.pack(expand=True, fill="both")
+    txt = ScrolledText(win, font=("Consolas",10)); txt.pack(expand=True, fill="both")
+    sel = [sid for sid,v in store_vars.items() if v.get()]
+    if not sel: txt.insert("end","No stores selected."); return
 
-    selected = [sid for sid, v in store_vars.items() if v.get()]
-    if not selected:
-        out.insert("end", "No stores selected."); return
-
-    today = date.today().strftime("%Y-%m-%d")
-    for acct in config_accounts:
-        cid, ckey = acct["ClientID"], acct["ClientKEY"]
-        for sid in acct["StoreIDs"]:
-            if sid not in selected: continue
-            data = fetch_data("Sales Summary", sid, today, today, cid, ckey)
-            net  = (data.get("data") or data)[0]["netSales"]
-            out.insert("end", f"Store {sid}: ${net}\n")
+    def worker():
+        today = datetime.date.today().strftime("%Y-%m-%d")
+        for acct in config_accounts:
+            for sid in acct["StoreIDs"]:
+                if sid not in sel: continue
+                data = fetch_data("Sales Summary", sid, today, today,
+                                  acct["ClientID"], acct["ClientKEY"])
+                net = (data.get("data") or data)[0]["netSales"]
+                txt.insert("end", f"{sid}: ${net}\n")
+    threading.Thread(target=worker, daemon=True).start()
 ```
+</details>
 
-### 2  Host helpers
-
-| Name | Use |
-|------|-----|
-| `fetch_data(endpoint, store_id, start, end, cid, ckey)` | LiveIQ API wrapper (returns JSON or `{"error": …}`) |
-| `store_vars` | `{store_id: tk.IntVar}` – see which stores are ticked |
-| `config_accounts` | list of account dicts (each has `StoreIDs`, `Status`) |
-| `account_store_map` | `{account_name: [stores]}` |
-| `flatten_json(obj)` | Turns nested JSON into dotted-path dict |
-| `log_error(msg)` | Append to `error.log` |
-
-### 3  Endpoint keys
-
-Value for the first arg of `fetch_data()` must match a key in `ENDPOINTS`:
-
-- `"Sales Summary"`
-- `"Daily Sales Summary"`
-- `"Daily Timeclock"`
-- `"Third Party Sales Summary"`
-- `"Third Party Transaction Summary"`
-- `"Transaction Summary"`
-- `"Transaction Details"`
-
-Add more by editing `ENDPOINTS` in **liveiq_gui.py**.
-
-### 4  Debug & best‑practice tips
-
-* Import heavy libs **inside `run()`** → smoother PyInstaller builds.  
-* Use `threading.Thread(..., daemon=True)` for long‑running tasks.  
-* Write errors to `log_error()`; read **error.log** if something fails.  
-* Ship demo modules with the app by keeping them in *modules/* and bundling the folder (`--add-data`). Users can override by adding files to their own modules folder next to the EXE.
+Full developer reference lives in **MODULE_DEVELOPER_README.md**.
 
 ---
 
-Happy hacking—open an issue or PR if you build a cool new report!
+## Contributing
+Found a bug, need a new endpoint, or have a killer module?  
+[Open an issue](https://github.com/your-org/liveiq-viewer/issues) or send a PR.  
+Guidelines:
+
+1. Fork → feature branch  
+2. `pip install -r requirements-dev.txt`  
+3. `pre-commit install`  
+4. Submit PR with screenshot / GIF for UI work.
+
+---
+
+## License
+MIT. Do anything, just don’t blame us if your sandwich shop catches fire.
+
+> _Built for busy Subway® franchisees who’d rather read numbers than copy‑paste them._
