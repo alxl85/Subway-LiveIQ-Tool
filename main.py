@@ -269,7 +269,7 @@ def update_dates(option: str, start_e: tk.Entry, end_e: tk.Entry) -> None:
 
 # ── main GUI ──────────────────────────────────────────────────────────────
 def build_gui() -> None:
-    root = tk.Tk(); root.title("LiveIQ Multi-Franchisee Tool"); root.geometry("960x800")
+    root = tk.Tk(); root.title("Subway-LiveIQ-Tool"); root.geometry("960x800")
     try:
         load_config_and_stores()
     except SystemExit:
