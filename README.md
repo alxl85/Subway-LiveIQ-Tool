@@ -189,8 +189,6 @@ def run(win):
 ```
 </details>
 
-Full developer reference lives in **MODULE_DEVELOPER_README.md**.
-
 ---
 
 ## Contributing
