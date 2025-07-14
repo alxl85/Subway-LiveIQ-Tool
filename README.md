@@ -72,7 +72,7 @@ Add credentials (see below) and relaunch.
 
 ## Packaging to .exe
 
-I have provided a current working version packeged into a standalone .exe but you can also download the script and package it yourself.
+I have provided a current working version packeged into a standalone .exe but here's how you can download the script and package it yourself.
 
 ```powershell
 pyinstaller --onefile --noconsole `
@@ -98,7 +98,7 @@ pyinstaller --onefile --noconsole `
   ]
 }
 ```
-**Location** — same folder as `LiveIQ-API-Tool.py` / `LiveIQ-API-Tool.exe`.
+**Location** — same folder as `main.py` / `LiveIQ-API-Tool.exe`.
 
 <details>
 <summary><b>How to obtain API keys</b></summary>
@@ -158,10 +158,13 @@ Release/
 
 ## Developing custom modules
 
+This site outlines the entire LiveIQ schema.
+https://app.swaggerhub.com/apis/Subway/freshconnect_liveiq_franchisee_api/v1
+
 Each plugin is **one file** in **modules/**. The viewer imports it and calls `run(window)`.
 
 <details>
-<summary><b>Minimal plugin example</b></summary>
+<summary><b>Minimal module example</b></summary>
 
 ```python
 # modules/my_module.py
