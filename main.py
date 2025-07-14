@@ -81,50 +81,95 @@ def flatten_json(obj: Any, parent: str = "", sep: str = ".") -> Dict[str, Any]:
 
 # ── config bootstrap ──────────────────────────────────────────────────────
 def load_config_and_stores() -> None:
-    global config_accounts                                             # noqa: PLW0603
+    """
+    Read *config.json*, auto-discover stores for each account, and populate:
 
+        • config_accounts
+        • account_store_map
+        • all_stores
+
+    If the file does not exist, a fully-filled template is written and the
+    program exits so the user can add real credentials.
+    """
+    global config_accounts  # noqa: PLW0603
+
+    # ── 1) ensure config.json exists ──────────────────────────────────────
     if not os.path.isfile(CONFIG_FILE):
+        default_cfg = {
+            "accounts": [
+                {
+                    "Name": "Franchisee A",
+                    "ClientID": "INSERT CLIENT ID HERE",
+                    "ClientKEY": "INSERT CLIENT KEY HERE",
+                },
+                {
+                    "Name": "Franchisee B",
+                    "ClientID": "INSERT CLIENT ID HERE",
+                    "ClientKEY": "INSERT CLIENT KEY HERE",
+                },
+                {
+                    "Name": "Franchisee C",
+                    "ClientID": "INSERT CLIENT ID HERE",
+                    "ClientKEY": "INSERT CLIENT KEY HERE",
+                },
+            ]
+        }
         with open(CONFIG_FILE, "w", encoding="utf-8") as fh:
-            json.dump({"accounts": []}, fh, indent=2)
-        messagebox.showinfo("Config", "Blank config.json created – add credentials.")
+            json.dump(default_cfg, fh, indent=2)
+        messagebox.showinfo(
+            "Config Created",
+            f"A starter {os.path.basename(CONFIG_FILE)} has been created.\n"
+            "Please add your LiveIQ credentials and relaunch the app.",
+        )
         raise SystemExit
 
+    # ── 2) load and validate ─────────────────────────────────────────────
     with open(CONFIG_FILE, "r", encoding="utf-8") as fh:
         cfg = json.load(fh)
 
     for acct in cfg.get("accounts", []):
         if not all(k in acct for k in ("Name", "ClientID", "ClientKEY")):
-            log_error(f"Malformed account: {acct}")
+            log_error(f"Malformed account entry: {acct}")
             continue
 
-        acct["Status"] = "ERROR"
+        acct["Status"] = "ERROR"          # pessimistic default
+
+        # ── 3) fetch store list for this account ─────────────────────────
         try:
             res = requests.get(
                 BASE_URL + "/api/Restaurants",
                 headers={
                     "api-client": acct["ClientID"],
-                    "api-key"   : acct["ClientKEY"],
-                    "Accept"    : "application/json",
+                    "api-key": acct["ClientKEY"],
+                    "Accept": "application/json",
                 },
                 timeout=10,
             )
             res.raise_for_status()
-            stores = [r["restaurantNumber"] for r in res.json() if "restaurantNumber" in r]
+            stores = [
+                r["restaurantNumber"]
+                for r in res.json()
+                if "restaurantNumber" in r
+            ]
             acct["StoreIDs"] = stores
             acct["Status"]   = "OK" if stores else "EMPTY"
             account_store_map[acct["Name"]] = stores
             all_stores.update(stores)
-        except Exception as exc:                                       # noqa: BLE001
-            log_error(f"Store fetch failed {acct['Name']}: {exc}")
+        except Exception as exc:          # noqa: BLE001
+            log_error(f"{acct['Name']} store fetch failed: {exc}")
 
+    # ── 4) expose full list to rest of program ───────────────────────────
     config_accounts[:] = cfg.get("accounts", [])
+
 
 # ── external-module loader ────────────────────────────────────────────────
 def load_external_modules(root: tk.Tk) -> None:
     mod_dir = os.path.join(SCRIPT_DIR, "modules")
+    # NEW: auto-create folder if missing, then exit quietly
     if not os.path.isdir(mod_dir):
+        os.makedirs(mod_dir, exist_ok=True)
         return
-
+    
     frame = tk.Frame(root); frame.pack(pady=10)
     row = col = 0
     for path in glob.glob(os.path.join(mod_dir, "*.py")):
